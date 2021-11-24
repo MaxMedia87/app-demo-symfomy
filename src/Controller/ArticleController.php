@@ -23,11 +23,11 @@ class ArticleController extends AbstractController
     /**
      * @Route ("/articles/{slug}", name="app_article_show")
      * @param $slug
-     * @param Parsedown $parsed
+     * @param Parsedown $markDownParser
      * @param AdapterInterface $cacheStorage
      * @return Response
      */
-    public function show($slug, Parsedown $parsed, AdapterInterface $cacheStorage): Response
+    public function show($slug, Parsedown $markDownParser, AdapterInterface $cacheStorage): Response
     {
         $comments = [
             'Crescere etiam ducunt ad teres fraticinida.',
@@ -57,8 +57,8 @@ EOF;
 
         $articleContent = $cacheStorage->get(
             'markdown_' . md5($articleContent),
-            function() use ($parsed, $articleContent) {
-                return $parsed->text($articleContent);
+            function() use ($markDownParser, $articleContent) {
+                return $markDownParser->text($articleContent);
         });
 
         return $this->render(
