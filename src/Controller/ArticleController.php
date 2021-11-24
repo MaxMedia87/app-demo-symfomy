@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Demontpx\ParsedownBundle\Parsedown;
-use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,8 +26,6 @@ class ArticleController extends AbstractController
      * @param Parsedown $parsed
      * @param AdapterInterface $cacheStorage
      * @return Response
-     *
-     * @throws InvalidArgumentException
      */
     public function show($slug, Parsedown $parsed, AdapterInterface $cacheStorage): Response
     {
@@ -58,21 +55,18 @@ class ArticleController extends AbstractController
 * Я тоже, — добавил Ниф-Ниф.
 EOF;
 
-        $cacheItem = $cacheStorage->getItem('markdown_' . md5($articleContent));
-
-        if (false === $cacheItem->isHit()) {
-            $cacheItem->set($articleContent);
-            $cacheStorage->save($cacheItem);
-        }
-
-        $articleContent = $cacheItem->get();
+        $articleContent = $cacheStorage->get(
+            'markdown_' . md5($articleContent),
+            function() use ($parsed, $articleContent) {
+                return $parsed->text($articleContent);
+        });
 
         return $this->render(
             'articles/show.html.twig',
             [
                 'article' => ucfirst($slug),
                 'comments' => $comments,
-                'articleContent' => $parsed->text($articleContent)
+                'articleContent' => $articleContent
             ]
         );
     }
