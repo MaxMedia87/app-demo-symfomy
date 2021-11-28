@@ -22,23 +22,37 @@ class MarkdownParser
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var bool
+     */
+    private $isDebug;
 
     /**
      * @param Parsedown $markDownParser
      * @param AdapterInterface $cacheStorage
      * @param LoggerInterface $logger
+     * @param bool $isDebug
      */
-    public function __construct(Parsedown $markDownParser, AdapterInterface $cacheStorage, LoggerInterface $logger)
-    {
+    public function __construct(
+        Parsedown $markDownParser,
+        AdapterInterface $cacheStorage,
+        LoggerInterface $logger,
+        bool $isDebug
+    ) {
         $this->markDownParser = $markDownParser;
         $this->cacheStorage = $cacheStorage;
         $this->logger = $logger;
+        $this->isDebug = $isDebug;
     }
 
     public function parse(string $source): string
     {
         if (false !== stripos($source, 'Нуф')) {
             $this->logger->info('Данный текст содержит запись о поросенке Нуф-Нуф');
+        }
+
+        if (true === $this->isDebug) {
+            return $this->markDownParser->text($source);
         }
 
         return $this->cacheStorage->get(
