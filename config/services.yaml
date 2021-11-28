@@ -6,6 +6,7 @@
 parameters:
     app.support_email: '%env(SUPPORT_EMAIL)%'
     app.example_enable: '%env(bool:EXAMPLE_ENABLE)%'
+    cache_adapter: cache.adapter.memcached
 services:
     # default configuration for services in *this* file
     _defaults:
