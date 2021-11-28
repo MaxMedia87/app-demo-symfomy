@@ -26,13 +26,13 @@ class MarkdownParser
     /**
      * @param Parsedown $markDownParser
      * @param AdapterInterface $cacheStorage
-     * @param LoggerInterface $logger
+     * @param LoggerInterface $markdownLogger
      */
-    public function __construct(Parsedown $markDownParser, AdapterInterface $cacheStorage, LoggerInterface $logger)
+    public function __construct(Parsedown $markDownParser, AdapterInterface $cacheStorage, LoggerInterface $markdownLogger)
     {
         $this->markDownParser = $markDownParser;
         $this->cacheStorage = $cacheStorage;
-        $this->logger = $logger;
+        $this->logger = $markdownLogger;
     }
 
     public function parse(string $source): string
