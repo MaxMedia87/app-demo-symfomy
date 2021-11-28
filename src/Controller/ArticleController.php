@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Demontpx\ParsedownBundle\Parsedown;
+use App\Service\MarkdownParser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,11 +22,10 @@ class ArticleController extends AbstractController
     /**
      * @Route ("/articles/{slug}", name="app_article_show")
      * @param $slug
-     * @param Parsedown $markDownParser
-     * @param AdapterInterface $cacheStorage
+     * @param MarkdownParser $markDownParser
      * @return Response
      */
-    public function show($slug, Parsedown $markDownParser, AdapterInterface $cacheStorage): Response
+    public function show($slug, MarkdownParser $markDownParser): Response
     {
         $comments = [
             'Crescere etiam ducunt ad teres fraticinida.',
@@ -55,11 +53,7 @@ class ArticleController extends AbstractController
 * Я тоже, — добавил Ниф-Ниф.
 EOF;
 
-        $articleContent = $cacheStorage->get(
-            'markdown_' . md5($articleContent),
-            function() use ($markDownParser, $articleContent) {
-                return $markDownParser->text($articleContent);
-        });
+        $articleContent = $markDownParser->parse($articleContent);
 
         return $this->render(
             'articles/show.html.twig',
