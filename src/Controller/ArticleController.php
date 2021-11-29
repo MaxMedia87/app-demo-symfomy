@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Service\MarkdownParser;
+use App\Service\SlackClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -63,5 +64,17 @@ EOF;
                 'articleContent' => $articleContent
             ]
         );
+    }
+
+    /**
+     * @Route ("/notify/slack", name="app_notify_slack")
+     * @param SlackClient $slackClient
+     * @return Response
+     */
+    public function notifySlack(SlackClient $slackClient): Response
+    {
+        $slackClient->send('Привет, это важное сообщение с сайта!', 'Администратор сайта');
+
+        return $this->json('Ok');
     }
 }
