@@ -14,14 +14,17 @@ class MarkdownParser
      * @var Parsedown
      */
     private $markDownParser;
+
     /**
      * @var AdapterInterface
      */
     private $cacheStorage;
+
     /**
      * @var LoggerInterface
      */
     private $logger;
+
     /**
      * @var bool
      */
