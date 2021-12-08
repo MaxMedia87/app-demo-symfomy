@@ -38,7 +38,7 @@
                     </a>
                 </td>
                 <td>{{ comment.authorName }}</td>
-                <td style="width: 20%;">{{ comment.comment }}</td>
+                <td style="width: 20%;">{{ comment.comment | u.truncate(40, '...') }}</td>
                 <td>20 days ago</td>
             </tr>
             {% else %}
