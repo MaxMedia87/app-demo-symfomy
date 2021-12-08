@@ -8,12 +8,12 @@ use Carbon\Carbon;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
-class AgeExtension extends AbstractExtension
+class DateOfChangeExtension extends AbstractExtension
 {
     public function getFilters(): array
     {
         return [
-            new TwigFilter('ago', [$this, 'getDiff']),
+            new TwigFilter('dateOfChange', [$this, 'getDiff']),
         ];
     }
 
