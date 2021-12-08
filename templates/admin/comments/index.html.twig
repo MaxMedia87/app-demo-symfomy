@@ -11,6 +11,7 @@
                    name="q"
                    class="form-control"
                    placeholder="Найти..."
+                   value="{{ app.request.query.get('q') }}"
             >
             <div class="input-group-append">
                 <button type="submit" class="btn btn-outline-secondary"><i class="fa fa-search"></i>
@@ -39,6 +40,10 @@
                 <td>{{ comment.authorName }}</td>
                 <td style="width: 20%;">{{ comment.comment }}</td>
                 <td>20 days ago</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4">Нет комментариев</td>
             </tr>
         {% endfor %}
         </tbody>
