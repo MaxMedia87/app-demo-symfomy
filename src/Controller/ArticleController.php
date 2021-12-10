@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Service\MarkdownParser;
 use App\Service\SlackClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,10 +22,9 @@ class ArticleController extends AbstractController
     /**
      * @Route ("/articles/{slug}", name="app_article_show")
      * @param $slug
-     * @param MarkdownParser $markDownParser
      * @return Response
      */
-    public function show($slug, MarkdownParser $markDownParser): Response
+    public function show($slug): Response
     {
         $comments = [
             'Crescere etiam ducunt ad teres fraticinida.',
@@ -53,8 +51,6 @@ class ArticleController extends AbstractController
 
 * Я тоже, — добавил Ниф-Ниф.
 EOF;
-
-        $articleContent = $markDownParser->parse($articleContent);
 
         return $this->render(
             'articles/show.html.twig',
