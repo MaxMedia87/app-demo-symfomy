@@ -153,4 +153,16 @@ class Article
             $this->getAuthor()
         );
     }
+
+    public function like(): self
+    {
+        $this->likeCount++;
+        return $this;
+    }
+
+    public function dislike(): self
+    {
+        $this->likeCount--;
+        return $this;
+    }
 }

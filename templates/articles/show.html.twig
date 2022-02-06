@@ -23,7 +23,11 @@
                     </div>
                     <div class="text-muted align-self-center ml-4">{{ article.publishedAt is not null ? article.publishedAt | dateOfChange : 'Неопубликована' }}</div>
                     <div class="text-muted align-self-center ml-4 article-detail-hearts"
-                         data-item="likes" data-type="like"><span data-item="likesCount" data-type="like">{{ article.likeCount }}</span><i
+                         data-item="likes"
+                         data-type="like"
+                         data-like-href="{{ path('app_article_like', {slug: article.slug, type: 'like'}) }}"
+                         data-dislike-href="{{ path('app_article_like', {slug: article.slug, type: 'dislike'}) }}"
+                    ><span data-item="likesCount" data-type="like">{{ article.likeCount }}</span><i
                                 class="far fa-heart text-danger"></i></div>
                 </div>
             </div>
