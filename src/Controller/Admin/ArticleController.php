@@ -47,6 +47,14 @@ EOF
             $article->setPublishedAt(new \DateTimeImmutable(sprintf('-%d days', rand(0, 50))));
         }
 
+        $authors = ['Кексик', 'Матроскин', 'Фунтик', 'Колбаска', 'Беляш'];
+        $images = ['car1.jpg', 'car2.jpg', 'car3.jpg'];
+
+        $article
+            ->setAuthor($authors[rand(0, 4)])
+            ->setLikeCount(rand(0, 10))
+            ->setImageFileName($images[rand(0, 2)]);
+
         $em->persist($article);
         $em->flush();
 

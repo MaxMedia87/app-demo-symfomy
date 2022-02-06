@@ -28,7 +28,7 @@
                         <div class="article-container mb-2">
                             <div class="row no-gutters border rounded-lg overflow-hidden flex-md-row mb-4 shadow-sm position-relative">
                                 <div class="col-auto d-none d-lg-block">
-                                    <img class="article-img" src="{{ asset('images/car2.jpg') }}">
+                                    <img class="article-img" src="{{ asset(article.imagePath) }}">
                                 </div>
                                 <a class="col p-2 px-4 d-flex flex-column article-item"
                                    href="{{ path('app_article_show', {slug: article.slug}) }}">
@@ -41,7 +41,7 @@
                                     <div class="d-flex justify-content-between">
                                         <div class="text-muted align-self-center"><img
                                                     class="article-author-img rounded-circle"
-                                                    src="https://robohash.org/Николай.png?set=set4"> Николай
+                                                    src="{{ article.authorAvatarPath }}"> {{ article.author }}
                                         </div>
                                         <div class="text-muted align-self-center">
                                             {{ article.publishedAt is not null ? article.publishedAt | dateOfChange : 'Неопубликована' }}
