@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,32 +20,51 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
-    // /**
-    //  * @return Article[] Returns an array of Article objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Article[]
+     */
+    public function findLatestPublished(): array
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->published($this->latest())
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Article
+    /**
+     * @return Article[]
+     */
+    public function findLatest(): array
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->latest()
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult()
+            ;
     }
-    */
+
+    /**
+     * @return Article[]
+     */
+    public function findPublished(): array
+    {
+        return $this->published()
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function latest(QueryBuilder $qb = null): QueryBuilder
+    {
+        return $this->getOrCreateQueryBuilder($qb)->orderBy('a.publishedAt', 'DESC');
+    }
+
+    public function published(QueryBuilder $qb = null): QueryBuilder
+    {
+        return $this->getOrCreateQueryBuilder($qb)->andWhere('a.publishedAt IS NOT NULL');
+    }
+
+    public function getOrCreateQueryBuilder(?QueryBuilder $qb): QueryBuilder
+    {
+        return true === isset($qb) ? $qb : $this->createQueryBuilder('a');
+    }
 }

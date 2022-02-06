@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Repository\ArticleRepository;
 use App\Service\SlackClient;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,30 +15,24 @@ class ArticleController extends AbstractController
 {
     /**
      * @Route("/", name="app_homepage")
+     * @param ArticleRepository $articleRepository
+     * @return Response
      */
-    public function homepage(): Response
+    public function homepage(ArticleRepository $articleRepository): Response
     {
-        return $this->render('homepage.html.twig');
+        $articles = $articleRepository->findLatestPublished();
+
+        return $this->render('homepage.html.twig', ['articles' => $articles]);
     }
 
     /**
      * @Route ("/articles/{slug}", name="app_article_show")
-     * @param $slug
-     * @param EntityManagerInterface $em
+     * @param Article $article
      *
      * @return Response
      */
-    public function show($slug, EntityManagerInterface $em): Response
+    public function show(Article $article): Response
     {
-        $repository = $em->getRepository(Article::class);
-        $article = $repository->findOneBy(['slug' => $slug]);
-
-        if (null === $article) {
-            throw $this->createNotFoundException(
-                sprintf('Статья %s не найдена', $slug)
-            );
-        }
-
         $comments = [
             'Crescere etiam ducunt ad teres fraticinida.',
             'Boil six chocolates, sauerkraut, and butterscotch in a large plastic bag over medium heat, cook for two minutes and season with some steak.',
