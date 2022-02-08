@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Article;
+use App\Repository\ArticleRepository;
 use App\Service\SlackClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,18 +15,23 @@ class ArticleController extends AbstractController
 {
     /**
      * @Route("/", name="app_homepage")
+     * @param ArticleRepository $articleRepository
+     * @return Response
      */
-    public function homepage(): Response
+    public function homepage(ArticleRepository $articleRepository): Response
     {
-        return $this->render('homepage.html.twig');
+        $articles = $articleRepository->findLatestPublished();
+
+        return $this->render('homepage.html.twig', ['articles' => $articles]);
     }
 
     /**
      * @Route ("/articles/{slug}", name="app_article_show")
-     * @param $slug
+     * @param Article $article
+     *
      * @return Response
      */
-    public function show($slug): Response
+    public function show(Article $article): Response
     {
         $comments = [
             'Crescere etiam ducunt ad teres fraticinida.',
@@ -33,31 +40,11 @@ class ArticleController extends AbstractController
             'God theres nothing like the scurvy endurance growing on the woodchuck.'
         ];
 
-        $slug = str_replace('-', ' ', $slug);
-
-        $articleContent = <<<EOF
-**Жили-были на свете три поросенка**. [Три брата](/). Все одинакового роста, кругленькие, розовые, 
-с одинаковыми веселыми хвостиками. Даже имена у них были похожи. Звали поросят: Ниф-Ниф, Нуф-Нуф и Наф-Наф.
-Все лето поросята кувыркались в зеленой траве, грелись на солнышке, нежились в лужах. Но вот наступила осень.
-* Пора нам подумать о зиме, — сказал как-то Наф-Наф своим братьям, проснувшись рано утром. 
-
-* Я весь дрожу от холода. Давайте построим дом и будем зимовать вместе под одной теплой крышей.
-
-#####Но его братья не хотели браться за работу.
-
-* Успеется! До зимы еще далеко. Мы еще погуляем, — сказал Ниф-Ниф и перекувырнулся через голову.
-
-* Когда нужно будет, я сам построю себе дом, — сказал Нуф-Нуф и лег в лужу.
-
-* Я тоже, — добавил Ниф-Ниф.
-EOF;
-
         return $this->render(
             'articles/show.html.twig',
             [
-                'article' => ucfirst($slug),
+                'article' => $article,
                 'comments' => $comments,
-                'articleContent' => $articleContent
             ]
         );
     }
