@@ -35,7 +35,6 @@ class ArticleFixtures extends BaseFixtures
         $this->createMany(Article::class, 10, function (Article $article) {
             $article
                 ->setTitle($this->faker->randomElement(self::$titles))
-                ->setSlug($this->faker->slug())
                 ->setBody(
                     '**Жили-были на свете три поросенка**. [Три брата](/).' .
                     'Все одинакового роста, кругленькие, розовые, с одинаковыми веселыми хвостиками. ' .
