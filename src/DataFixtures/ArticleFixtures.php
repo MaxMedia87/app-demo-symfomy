@@ -74,6 +74,10 @@ class ArticleFixtures extends BaseFixtures
             ->setCreatedAt($this->faker->dateTimeBetween('- 100 days', '-1 day'))
             ->setArticle($article);
 
+        if ($this->faker->boolean()) {
+            $comment->setDeletedAt($this->faker->dateTimeThisMonth());
+        }
+
         $manager->persist($comment);
     }
 }
