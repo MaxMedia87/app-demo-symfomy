@@ -33,18 +33,10 @@ class ArticleController extends AbstractController
      */
     public function show(Article $article): Response
     {
-        $comments = [
-            'Crescere etiam ducunt ad teres fraticinida.',
-            'Boil six chocolates, sauerkraut, and butterscotch in a large plastic bag over medium heat, cook for two minutes and season with some steak.',
-            'Boil six chocolates, sauerkraut, and buttersc.',
-            'God theres nothing like the scurvy endurance growing on the woodchuck.'
-        ];
-
         return $this->render(
             'articles/show.html.twig',
             [
-                'article' => $article,
-                'comments' => $comments,
+                'article' => $article
             ]
         );
     }

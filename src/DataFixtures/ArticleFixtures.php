@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Article;
+use App\Entity\Comment;
 use DateTimeImmutable;
 use Doctrine\Persistence\ObjectManager;
 
@@ -32,7 +33,7 @@ class ArticleFixtures extends BaseFixtures
 
     public function loadData(ObjectManager $manager): void
     {
-        $this->createMany(Article::class, 10, function (Article $article) {
+        $this->createMany(Article::class, 10, function (Article $article) use ($manager) {
             $article
                 ->setTitle($this->faker->randomElement(self::$titles))
                 ->setBody(
@@ -53,6 +54,16 @@ class ArticleFixtures extends BaseFixtures
                 ->setAuthor($this->faker->randomElement(self::$authors))
                 ->setLikeCount($this->faker->numberBetween(0, 10))
                 ->setImageFileName($this->faker->randomElement(self::$images));
+
+            for ($i = 0; $i < 3; $i++) {
+                $comment = new Comment();
+                $comment
+                    ->setAuthorName('Усатый-полосатый')
+                    ->setContent($this->faker->paragraph())
+                    ->setArticle($article);
+
+                $manager->persist($comment);
+            }
         });
     }
 }
