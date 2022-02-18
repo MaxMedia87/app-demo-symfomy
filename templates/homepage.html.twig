@@ -33,7 +33,7 @@
                                 <a class="col p-2 px-4 d-flex flex-column article-item"
                                    href="{{ path('app_article_show', {slug: article.slug}) }}">
                                     <h5 class="mb-2">{{ article.title }}<span
-                                                class="badge badge-info article-comments">5 комментов</span></h5>
+                                                class="badge badge-info article-comments">{{ article.comments | length }} комментов</span></h5>
                                     <div class="mb-2 d-flex">
                                         <span class="badge badge-pill badge-secondary mr-2">Дрындулет</span>
                                         <span class="badge badge-pill badge-secondary mr-2">Карета</span>
