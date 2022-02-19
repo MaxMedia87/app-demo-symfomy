@@ -21,16 +21,22 @@ class CommentRepository extends ServiceEntityRepository
 
     /**
      * @param string|null $query
+     * @param bool $showWithDeletes
+     *
      * @return Comment[]
      */
-    public function findAllWithSearch(?string $query): array
+    public function findAllWithSearch(?string $query, bool $showWithDeletes = false): array
     {
         $qb = $this->createQueryBuilder('c');
 
         if (null !== $query) {
             $qb
                 ->andWhere('c.content LIKE :query OR c.authorName LIKE :query')
-                ->setParameter('query', '%' . mb_strtolower($query) . '%');
+                ->setParameter('query', "%$query%");
+        }
+
+        if (true === $showWithDeletes) {
+            $this->getEntityManager()->getFilters()->disable('softdeleteable');
         }
 
         return $qb

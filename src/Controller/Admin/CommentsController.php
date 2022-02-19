@@ -21,7 +21,10 @@ class CommentsController extends AbstractController
      */
     public function index(Request $request, CommentRepository $commentRepository): Response
     {
-        $comments = $commentRepository->findAllWithSearch($request->query->get('q'));
+        $comments = $commentRepository->findAllWithSearch(
+            $request->query->get('q'),
+            $request->query->has('showDeleted')
+        );
 
         return $this->render('admin/comments/index.html.twig', [
             'comments' => $comments,
