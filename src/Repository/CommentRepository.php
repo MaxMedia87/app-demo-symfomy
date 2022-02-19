@@ -31,7 +31,7 @@ class CommentRepository extends ServiceEntityRepository
 
         if (null !== $query) {
             $qb
-                ->andWhere('c.content LIKE :query OR c.authorName LIKE :query')
+                ->andWhere('c.content LIKE :query OR c.authorName LIKE :query OR a.title LIKE :query')
                 ->setParameter('query', "%$query%");
         }
 
@@ -40,6 +40,7 @@ class CommentRepository extends ServiceEntityRepository
         }
 
         return $qb
+                ->innerJoin('c.article', 'a')
                 ->orderBy('c.createdAt', 'DESC')
                 ->getQuery()
                 ->getResult();
