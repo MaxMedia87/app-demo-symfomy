@@ -40,6 +40,7 @@ class CommentRepository extends ServiceEntityRepository
         }
 
         return $qb
+                ->addSelect('a')
                 ->innerJoin('c.article', 'a')
                 ->orderBy('c.createdAt', 'DESC')
                 ->getQuery()
