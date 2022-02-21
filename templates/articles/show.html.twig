@@ -5,6 +5,8 @@
 {% block content_row_class %}{{ parent() }} no-gutters featured-border{% endblock %}
 {% block content_col_class %}article-detail{% endblock %}
 
+{% set countComments = article.comments | length %}
+
 {% block content %}
     <div class="col-sm-12 p-2">
         <div class="media d-flex align-content-center">
@@ -39,7 +41,10 @@
     </div>
 
     <div class="col-sm-12 mb-4">
-        <h3><i class="pr-3 far fa-comment text-secondary"></i>{{ article.comments | length }} Комментария</h3>
+        <h3><i class="pr-3 far fa-comment text-secondary"></i>
+            {{ countComments }}
+            {{ countComments | declension(['комментарий', 'комментария', 'комментариев']) }}
+        </h3>
         <hr>
 
         <div class="row mb-4">

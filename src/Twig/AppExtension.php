@@ -13,6 +13,7 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFilter('cachedMarkdownParser', [AppRuntime::class, 'parseMarkdown'], ['is_safe' => ['html']]),
+            new TwigFilter('declension', [AppRuntime::class, 'declensionWords']),
         ];
     }
 }

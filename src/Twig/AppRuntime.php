@@ -23,4 +23,19 @@ class AppRuntime implements RuntimeExtensionInterface
     {
        return $this->markdownParser->parse($content);
     }
+
+    public function declensionWords(int $number, array $words): string
+    {
+        $num = ($n = abs($number) % 100) > 19 ? $n % 10 : $n;
+
+        if ($num === 1) {
+            return $words[0];
+        }
+
+        if (1 < $num && $num < 5) {
+            return $words[1];
+        }
+
+        return $words[2];
+    }
 }
