@@ -59,7 +59,7 @@ abstract class BaseFixtures extends Fixture
      */
     protected function getRandomReference(string $className): object
     {
-        if (! isset($this->referencesIndex[$className])) {
+        if (false === isset($this->referencesIndex[$className])) {
             $this->referencesIndex[$className] = [];
 
             foreach ($this->referenceRepository->getReferences() as $key => $reference) {
@@ -69,7 +69,7 @@ abstract class BaseFixtures extends Fixture
             }
         }
 
-        if (empty($this->referencesIndex[$className])) {
+        if (true === empty($this->referencesIndex[$className])) {
             throw new \Exception('Не найдены ссылки на класс: ' . $className);
         }
 
