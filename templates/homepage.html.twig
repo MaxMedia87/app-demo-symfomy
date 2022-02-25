@@ -39,10 +39,7 @@
                                             {{ countComments | declension(['коммент', 'коммента', 'комментов']) }}
                                         </span>
                                     </h5>
-                                    <div class="mb-2 d-flex">
-                                        <span class="badge badge-pill badge-secondary mr-2">Дрындулет</span>
-                                        <span class="badge badge-pill badge-secondary mr-2">Карета</span>
-                                    </div>
+                                    {% include 'articles/partial/article_tags.html.twig' with { tags: article.tags } %}
                                     <div class="d-flex justify-content-between">
                                         <div class="text-muted align-self-center"><img
                                                     class="article-author-img rounded-circle"

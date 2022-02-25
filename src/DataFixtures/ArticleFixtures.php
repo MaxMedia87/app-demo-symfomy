@@ -3,10 +3,12 @@
 namespace App\DataFixtures;
 
 use App\Entity\Article;
+use App\Entity\Tag;
 use DateTimeImmutable;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class ArticleFixtures extends BaseFixtures
+class ArticleFixtures extends BaseFixtures implements DependentFixtureInterface
 {
     private static $titles = [
         'Есть ли жизнь после девятой жизни?',
@@ -53,6 +55,24 @@ class ArticleFixtures extends BaseFixtures
                 ->setAuthor($this->faker->randomElement(self::$authors))
                 ->setLikeCount($this->faker->numberBetween(0, 10))
                 ->setImageFileName($this->faker->randomElement(self::$images));
+
+            /** @var Tag[] $tags */
+            $tags = [];
+
+            for ($i = 0; $i < $this->faker->numberBetween(0, 5); $i++) {
+                $tags[] = $this->getRandomReference(Tag::class);
+            }
+
+            foreach ($tags as $tag) {
+                $article->addTag($tag);
+            }
         });
+    }
+
+    public function getDependencies(): array
+    {
+        return [
+            TagFixtures::class
+        ];
     }
 }
