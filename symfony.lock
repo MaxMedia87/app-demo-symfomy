@@ -124,6 +124,12 @@
     "http-interop/http-factory-guzzle": {
         "version": "1.2.0"
     },
+    "knplabs/knp-components": {
+        "version": "v3.3.0"
+    },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v5.8.0"
+    },
     "monolog/monolog": {
         "version": "2.3.5"
     },
