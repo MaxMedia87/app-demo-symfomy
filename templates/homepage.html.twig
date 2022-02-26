@@ -25,6 +25,7 @@
                         </div>
 
                         {% for article in articles %}
+                            {% set countComments = article.comments | length %}
                         <div class="article-container mb-2">
                             <div class="row no-gutters border rounded-lg overflow-hidden flex-md-row mb-4 shadow-sm position-relative">
                                 <div class="col-auto d-none d-lg-block">
@@ -32,12 +33,13 @@
                                 </div>
                                 <a class="col p-2 px-4 d-flex flex-column article-item"
                                    href="{{ path('app_article_show', {slug: article.slug}) }}">
-                                    <h5 class="mb-2">{{ article.title }}<span
-                                                class="badge badge-info article-comments">{{ article.comments | length }} комментов</span></h5>
-                                    <div class="mb-2 d-flex">
-                                        <span class="badge badge-pill badge-secondary mr-2">Дрындулет</span>
-                                        <span class="badge badge-pill badge-secondary mr-2">Карета</span>
-                                    </div>
+                                    <h5 class="mb-2">{{ article.title }}
+                                        <span class="badge badge-info article-comments">
+                                            {{ countComments }}
+                                            {{ countComments | declension(['коммент', 'коммента', 'комментов']) }}
+                                        </span>
+                                    </h5>
+                                    {% include 'articles/partial/article_tags.html.twig' with { tags: article.tags } %}
                                     <div class="d-flex justify-content-between">
                                         <div class="text-muted align-self-center"><img
                                                     class="article-author-img rounded-circle"

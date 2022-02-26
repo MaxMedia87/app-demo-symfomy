@@ -27,7 +27,9 @@ class ArticleRepository extends ServiceEntityRepository
     {
         return $this->published($this->latest())
             ->addSelect('c')
-            ->innerJoin('a.comments', 'c')
+            ->leftJoin('a.comments', 'c')
+            ->addSelect('t')
+            ->leftJoin('a.tags', 't')
             ->getQuery()
             ->getResult()
         ;
