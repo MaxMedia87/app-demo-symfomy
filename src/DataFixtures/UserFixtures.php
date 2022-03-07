@@ -24,7 +24,12 @@ class UserFixtures extends BaseFixtures
             $user
                 ->setEmail($this->faker->email)
                 ->setFirstName($this->faker->firstName())
-                ->setPassword($this->passwordHasher->hashPassword($user, '123456'));
+                ->setPassword($this->passwordHasher->hashPassword($user, '123456'))
+                ->setIsActive(true);
+
+            if ($this->faker->boolean(30)) {
+                $user->setIsActive(false);
+            }
         });
     }
 }
