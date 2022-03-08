@@ -26,6 +26,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
      * @var RouterInterface
      */
     private $router;
+
     /**
      * @var UserRepository
      */
@@ -90,15 +91,4 @@ class LoginFormAuthenticator extends AbstractAuthenticator
             $this->router->generate('app_login')
         );
     }
-
-//    public function start(Request $request, AuthenticationException $authException = null): Response
-//    {
-//        /*
-//         * If you would like this class to control what happens when an anonymous user accesses a
-//         * protected page (e.g. redirect to /login), uncomment this method and make this class
-//         * implement Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface.
-//         *
-//         * For more details, see https://symfony.com/doc/current/security/experimental_authenticators.html#configuring-the-authentication-entry-point
-//         */
-//    }
 }
