@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Repository\UserRepository;
@@ -43,12 +45,7 @@ class AppUserDeactivateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $userId = (int) $input->getArgument('id');
-
-        $isActivate = true;
-
-        if (null === $input->getOption('reverse')) {
-            $isActivate = false;
-        }
+        $isActivate = (bool) $input->getOption('reverse');
 
         $user = $this->userRepository->find($userId);
 
@@ -59,7 +56,6 @@ class AppUserDeactivateCommand extends Command
 
         $user->setIsActive($isActivate);
 
-        $this->em->persist($user);
         $this->em->flush();
 
         return Command::SUCCESS;
