@@ -20,9 +20,12 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class LoginFormAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
+    use TargetPathTrait;
+
     /**
      * @var RouterInterface
      */
@@ -43,7 +46,6 @@ class LoginFormAuthenticator extends AbstractAuthenticator implements Authentica
     {
         return new RedirectResponse($this->router->generate('app_login'));
     }
-
 
     public function supports(Request $request): ?bool
     {
@@ -85,8 +87,10 @@ class LoginFormAuthenticator extends AbstractAuthenticator implements Authentica
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $backUrl = $this->getTargetPath($request->getSession(), $firewallName);
+
         return new RedirectResponse(
-            $this->router->generate('app_homepage')
+            null !== $backUrl ? $backUrl : $this->router->generate('app_homepage')
         );
     }
 
