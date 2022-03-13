@@ -14,6 +14,11 @@
     <title>{% block title %}Cat-Cas-Car{% endblock %}</title>
 </head>
 <body>
+{% if is_granted('IS_IMPERSONATOR') %}
+    <div class="alert alert-warning">
+        Имперсонализация включена <a href="{{ impersonation_exit_path( path('app_homepage') ) }}">Выйти</a>
+    </div>
+{% endif %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 navbar-bg">
     <div class="container py-2">
 
