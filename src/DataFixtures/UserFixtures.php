@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\ApiToken;
+use App\Entity\Tag;
 use App\Entity\User;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -29,7 +30,9 @@ class UserFixtures extends BaseFixtures
                 ->setIsActive(true)
                 ->setRoles(['ROLE_API']);
 
-            $manager->persist(new ApiToken($user));
+            for ($i = 0; $i < 3; $i++) {
+                $manager->persist(new ApiToken($user));
+            }
         });
 
         $this->create(User::class, function (User $user) use ($manager) {
