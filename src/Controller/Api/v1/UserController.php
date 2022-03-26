@@ -17,6 +17,8 @@ class UserController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->json($this->getUser());
+        return $this->json($this->getUser(), 200, [], [
+            'groups' => ['main']
+        ]);
     }
 }
