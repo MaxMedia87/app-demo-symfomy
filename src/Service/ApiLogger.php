@@ -20,4 +20,9 @@ class ApiLogger
     {
         $this->logger->warning($message, $context);
     }
+
+    public function info($message, array $context = array()): void
+    {
+        $this->logger->info($message, $context);
+    }
 }
