@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
-use App\Entity\Article;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @IsGranted("ROLE_ADMIN_ARTICLE")
+ */
 class ArticleController extends AbstractController
 {
     /**

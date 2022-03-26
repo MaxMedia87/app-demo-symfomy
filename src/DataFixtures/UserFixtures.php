@@ -20,6 +20,24 @@ class UserFixtures extends BaseFixtures
 
     public function loadData(ObjectManager $manager): void
     {
+        $this->create(User::class, function (User $user) {
+            $user
+                ->setEmail('api@symfony.skillbox')
+                ->setFirstName('Гена')
+                ->setPassword($this->passwordHasher->hashPassword($user, '123456'))
+                ->setIsActive(true)
+                ->setRoles(['ROLE_API']);
+        });
+
+        $this->create(User::class, function (User $user) {
+            $user
+                ->setEmail('admin@catcascar.ru')
+                ->setFirstName('Администратор')
+                ->setPassword($this->passwordHasher->hashPassword($user, '123456'))
+                ->setIsActive(true)
+                ->setRoles(['ROLE_ADMIN']);
+        });
+
         $this->createMany(User::class, 10, function (User $user) {
             $user
                 ->setEmail($this->faker->email)
