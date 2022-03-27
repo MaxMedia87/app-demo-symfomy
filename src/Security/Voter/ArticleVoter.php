@@ -41,7 +41,7 @@ class ArticleVoter extends Voter
         switch ($attribute) {
             case 'MANAGE':
                 if (true === $user->equals($subject->getAuthor())
-                    || $this->security->isGranted('ROLE_ADMIN')
+                    || $this->security->isGranted('ROLE_ADMIN_ARTICLE')
                 ) {
                     return true;
                 }
