@@ -17,8 +17,8 @@
                 <div class="d-flex">
                     <div class="text-muted align-self-center">
                         <img class="article-author-img rounded-circle mr-2"
-                             src="{{ article.authorAvatarPath }}">
-                        {{ article.author }}
+                             src="{{ article.author.avatarUrl }}">
+                        {{ article.author.firstName }}
                     </div>
                     <div class="text-muted align-self-center ml-4">{{ article.publishedAt is not null ? article.publishedAt | dateOfChange : 'Неопубликована' }}</div>
                     <div class="text-muted align-self-center ml-4 article-detail-hearts"

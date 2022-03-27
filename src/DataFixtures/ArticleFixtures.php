@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Article;
 use App\Entity\Tag;
+use App\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -15,15 +16,6 @@ class ArticleFixtures extends BaseFixtures implements DependentFixtureInterface
         'Когда в машинах поставят лоток?',
         'В погоне за красной точкой',
         'В чем смысл жизни сосисок',
-    ];
-
-
-    private static $authors = [
-        'Кексик',
-        'Матроскин',
-        'Фунтик',
-        'Колбаска',
-        'Беляш'
     ];
 
     private static $images = [
@@ -51,8 +43,11 @@ class ArticleFixtures extends BaseFixtures implements DependentFixtureInterface
                 );
             }
 
+            /** @var User $author */
+            $author = $this->getRandomReference(User::class);
+
             $article
-                ->setAuthor($this->faker->randomElement(self::$authors))
+                ->setAuthor($author)
                 ->setLikeCount($this->faker->numberBetween(0, 10))
                 ->setImageFileName($this->faker->randomElement(self::$images));
 
@@ -72,7 +67,8 @@ class ArticleFixtures extends BaseFixtures implements DependentFixtureInterface
     public function getDependencies(): array
     {
         return [
-            TagFixtures::class
+            TagFixtures::class,
+            UserFixtures::class
         ];
     }
 }
