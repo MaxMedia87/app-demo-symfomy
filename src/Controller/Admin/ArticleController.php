@@ -28,6 +28,7 @@ class ArticleController extends AbstractController
     }
 
     /**
+     * @IsGranted("MANAGE", subject="article")
      * @Route("/admin/articles/{id}/edit", name="app_admin_articles_edit")
      *
      * @param Article $article
@@ -35,8 +36,6 @@ class ArticleController extends AbstractController
      */
     public function edit(Article $article): Response
     {
-        $this->denyAccessUnlessGranted('MANAGE', $article);
-
         return new Response('Страница редактирования статьи: ' . $article->getTitle());
     }
 }
