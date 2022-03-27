@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Article;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ArticleLikeController extends AbstractController
@@ -17,7 +18,7 @@ class ArticleLikeController extends AbstractController
      * @param string $type
      * @param EntityManagerInterface $em
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return JsonResponse
      */
     public function like(Article $article, string $type, EntityManagerInterface $em)
     {
@@ -27,7 +28,6 @@ class ArticleLikeController extends AbstractController
             $article->dislike();
         }
 
-        $em->persist($article);
         $em->flush();
 
         return $this->json(['likes' => $article->getLikeCount()]);
