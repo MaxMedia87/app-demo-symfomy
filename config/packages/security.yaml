@@ -23,7 +23,10 @@ security:
             provider: app_user_provider
             logout:
                 path: app_logout
-            custom_authenticator: App\Security\LoginFormAuthenticator
+            entry_point: App\Security\LoginFormAuthenticator
+            custom_authenticator:
+                - App\Security\LoginFormAuthenticator
+                - App\Security\ApiTokenAuthenticator
 
             remember_me:
                 secret: '%kernel.secret%'
