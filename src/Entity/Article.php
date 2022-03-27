@@ -8,6 +8,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
@@ -20,38 +21,44 @@ class Article
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("show_article")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("show_article")
      */
     private $title;
 
     /**
-     *
      * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(type="string", length=100, unique=true)
+     * @Groups("show_article")
      */
     private $slug;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("show_article")
      */
     private $body;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups("show_article")
      */
     private $publishedAt;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups("show_article")
      */
     private $likeCount;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("show_article")
      */
     private $imageFileName;
 

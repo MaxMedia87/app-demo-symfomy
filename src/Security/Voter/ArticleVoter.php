@@ -23,7 +23,7 @@ class ArticleVoter extends Voter
 
     protected function supports(string $attribute, $subject): bool
     {
-        return true === in_array($attribute, ['MANAGE'])
+        return true === in_array($attribute, ['MANAGE', 'MANAGE_API'])
             && true === $subject instanceof Article;
     }
 
@@ -42,6 +42,13 @@ class ArticleVoter extends Voter
             case 'MANAGE':
                 if (true === $user->equals($subject->getAuthor())
                     || $this->security->isGranted('ROLE_ADMIN_ARTICLE')
+                ) {
+                    return true;
+                }
+                break;
+            case 'MANAGE_API':
+                if (true === $user->equals($subject->getAuthor())
+                    || $this->security->isGranted('ROLE_API')
                 ) {
                     return true;
                 }
