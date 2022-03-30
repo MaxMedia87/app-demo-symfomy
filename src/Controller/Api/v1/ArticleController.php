@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api\v1;
 
+use App\Entity\Article;
 use App\Service\ApiLogger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,5 +27,19 @@ class ArticleController extends AbstractController
         }
 
         return new JsonResponse([]);
+    }
+
+    /**
+     * @IsGranted("MANAGE_API", subject="article")
+     * @Route("/api/v1/artices/{id}", name="app_api_v1_article")
+     *
+     * @param Article $article
+     * @return Response
+     */
+    public function show(Article $article): Response
+    {
+        return $this->json($article, 200, [], [
+            'groups' => ['show_article']
+        ]);
     }
 }
