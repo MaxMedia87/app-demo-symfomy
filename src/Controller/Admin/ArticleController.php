@@ -31,8 +31,11 @@ class ArticleController extends AbstractController
      *
      * @return Response
      */
-    public function index(Request $request, ArticleRepository $articleRepository, PaginatorInterface $paginator)
-    {
+    public function index(
+        Request $request,
+        ArticleRepository $articleRepository,
+        PaginatorInterface $paginator
+    ): Response {
         $pagination = $paginator->paginate(
             $articleRepository->latest(),
             $request->query->getInt('page', 1),
@@ -61,10 +64,6 @@ class ArticleController extends AbstractController
         if (true === $form->isSubmitted() && true === $form->isValid()) {
             /** @var Article $article */
             $article = $form->getData();
-
-            $article
-                ->setAuthor($this->getUser())
-                ->setPublishedAt(new \DateTimeImmutable());
 
             $em->persist($article);
             $em->flush();
