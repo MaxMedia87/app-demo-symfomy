@@ -90,9 +90,6 @@ class ArticleRepository extends ServiceEntityRepository
                 ->setParameter('query', "%$query%");
         }
 
-        return $qb
-            ->addSelect('u')
-            ->innerJoin('a.author', 'u')
-            ->orderBy('a.publishedAt', 'DESC');
+       return $this->latestWithAuthor($qb);
     }
 }
