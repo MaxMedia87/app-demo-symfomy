@@ -36,14 +36,26 @@ class ArticleController extends AbstractController
         ArticleRepository $articleRepository,
         PaginatorInterface $paginator
     ): Response {
+        $defaultPerPage = 10;
+        $perPage = 0;
+
+        if (true === $request->query->has('perPage')
+            && false === empty($request->query->get('perPage'))
+        ) {
+            $perPage = (int) $request->query->get('perPage');
+        }
+
+        $query = $request->query->get('q');
+
         $pagination = $paginator->paginate(
-            $articleRepository->latestWithAuthor(),
+            $articleRepository->findAllWithSearchQueryBuilder($query),
             $request->query->getInt('page', 1),
-            10
+            0 === $perPage ? $defaultPerPage : $perPage
         );
 
         return $this->render('admin/article/index.html.twig', [
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'perPage' => [10, 50, 100]
         ]);
     }
 

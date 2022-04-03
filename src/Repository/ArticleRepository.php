@@ -60,9 +60,9 @@ class ArticleRepository extends ServiceEntityRepository
     public function latestWithAuthor(QueryBuilder $qb = null): QueryBuilder
     {
         return $this->getOrCreateQueryBuilder($qb)
-            ->orderBy('a.publishedAt', 'DESC')
             ->innerJoin('a.author', 'u')
-            ->addSelect('u');
+            ->addSelect('u')
+            ->orderBy('a.publishedAt', 'DESC');
     }
 
     public function published(QueryBuilder $qb = null): QueryBuilder
@@ -73,5 +73,26 @@ class ArticleRepository extends ServiceEntityRepository
     public function getOrCreateQueryBuilder(?QueryBuilder $qb): QueryBuilder
     {
         return true === isset($qb) ? $qb : $this->createQueryBuilder('a');
+    }
+
+    /**
+     * @param string|null $query
+     *
+     * @return QueryBuilder
+     */
+    public function findAllWithSearchQueryBuilder(?string $query): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        if (null !== $query) {
+            $qb
+                ->andWhere('a.title LIKE :query OR a.body LIKE :query OR u.firstName LIKE :query')
+                ->setParameter('query', "%$query%");
+        }
+
+        return $qb
+            ->addSelect('u')
+            ->innerJoin('a.author', 'u')
+            ->orderBy('a.publishedAt', 'DESC');
     }
 }
