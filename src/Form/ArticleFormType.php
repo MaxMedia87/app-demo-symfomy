@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Article;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\ArticleWordsFilter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -20,9 +21,15 @@ class ArticleFormType extends AbstractType
      */
     private $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+    /**
+     * @var ArticleWordsFilter
+     */
+    private $articleWordsFilter;
+
+    public function __construct(UserRepository $userRepository, ArticleWordsFilter $articleWordsFilter)
     {
         $this->userRepository = $userRepository;
+        $this->articleWordsFilter = $articleWordsFilter;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -49,13 +56,31 @@ class ArticleFormType extends AbstractType
             ])
         ;
 
+        $builder->get('title')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($titleTransformFromDatabase) {
+                    if (null === $titleTransformFromDatabase) {
+                        return '';
+                    }
+
+                    return $titleTransformFromDatabase;
+                },
+                function ($titleFromInput) {
+                    return $this->articleWordsFilter->filter($titleFromInput, ['стакан', 'налил']);
+                }
+            ));
+
         $builder->get('body')
             ->addModelTransformer(new CallbackTransformer(
                 function ($bodyTransformFromDatabase) {
-                    return str_replace('**собака**', 'собака', $bodyTransformFromDatabase);
+                    if (null === $bodyTransformFromDatabase) {
+                        return '';
+                    }
+
+                    return $bodyTransformFromDatabase;
                 },
                 function ($bodyFromInput) {
-                    return str_replace('собака', '**собака**', $bodyFromInput);
+                    return $this->articleWordsFilter->filter($bodyFromInput, ['стакан', 'налил']);
                 }
             ));
     }

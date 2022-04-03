@@ -36,3 +36,6 @@ services:
     App\Service\ApiLogger:
         arguments:
             $logger: '@monolog.logger.api'
+
+    app.article.words.filter:
+        class: App\Service\ArticleWordsFilter
