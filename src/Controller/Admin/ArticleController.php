@@ -37,7 +37,7 @@ class ArticleController extends AbstractController
         PaginatorInterface $paginator
     ): Response {
         $pagination = $paginator->paginate(
-            $articleRepository->latest(),
+            $articleRepository->latestWithAuthor(),
             $request->query->getInt('page', 1),
             10
         );

@@ -25,7 +25,7 @@ class ArticleRepository extends ServiceEntityRepository
      */
     public function findLatestPublished(): array
     {
-        return $this->published($this->latest())
+        return $this->published($this->latestWithAuthor())
             ->addSelect('c')
             ->leftJoin('a.comments', 'c')
             ->addSelect('t')
@@ -40,7 +40,7 @@ class ArticleRepository extends ServiceEntityRepository
      */
     public function findLatest(): array
     {
-        return $this->latest()
+        return $this->latestWithAuthor()
             ->getQuery()
             ->getResult()
             ;
@@ -57,9 +57,12 @@ class ArticleRepository extends ServiceEntityRepository
             ;
     }
 
-    public function latest(QueryBuilder $qb = null): QueryBuilder
+    public function latestWithAuthor(QueryBuilder $qb = null): QueryBuilder
     {
-        return $this->getOrCreateQueryBuilder($qb)->orderBy('a.publishedAt', 'DESC');
+        return $this->getOrCreateQueryBuilder($qb)
+            ->orderBy('a.publishedAt', 'DESC')
+            ->innerJoin('a.author', 'u')
+            ->addSelect('u');
     }
 
     public function published(QueryBuilder $qb = null): QueryBuilder
