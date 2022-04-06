@@ -9,6 +9,8 @@ use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
@@ -28,6 +30,7 @@ class Article
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups("show_article")
+     * @Assert\NotBlank()
      */
     private $title;
 
@@ -250,5 +253,20 @@ class Article
         $this->author = $author;
 
         return $this;
+    }
+
+    /**
+     * @param ExecutionContextInterface $context
+     * @param $payload
+     *
+     * @Assert\Callback()
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if (false !== mb_stripos($this->getTitle(), 'собак')) {
+            $context->buildViolation('Про собак писать запрещено.')
+                ->atPath('title')
+                ->addViolation();
+        }
     }
 }

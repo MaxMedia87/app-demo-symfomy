@@ -38,6 +38,7 @@ class ArticleFormType extends AbstractType
             ->add('title', TextType::class, [
                 'label' => 'Название статьи',
                 'help' => 'Не используйте слово "собака"',
+                'required' => false
             ])
             ->add('body', TextareaType::class, [
                 'label' => 'Содержимое статьи'
@@ -52,7 +53,8 @@ class ArticleFormType extends AbstractType
                     return sprintf('%s (id: %d)', $user->getFirstName(), $user->getId());
                 },
                 'choices' => $this->userRepository->findAllSortedByName(),
-                'placeholder' => 'Выберите автора статьи'
+                'placeholder' => 'Выберите автора статьи',
+                'invalid_message' => 'Автор не существует.'
             ])
         ;
 
