@@ -10,7 +10,10 @@
                     <h1>Создание статьи</h1>
                     {{ form_start(articleForm) }}
 
-                        {{ form_widget(articleForm) }}
+                        {{ form_row(articleForm.title, {label: 'Заголовок'}) }}
+                        {{ form_row(articleForm.body, {label: 'Содержимое'}) }}
+                        {{ form_row(articleForm.publishedAt, {label: 'Дата публикации'}) }}
+                        {{ form_row(articleForm.author, {label: 'Автор'}) }}
 
                     <button type="submit" class="btn btn-primary">Создать</button>
                     {{ form_end(articleForm) }}
