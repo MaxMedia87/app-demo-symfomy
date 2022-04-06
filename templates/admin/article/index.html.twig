@@ -1,0 +1,58 @@
+{% extends 'base_content.html.twig' %}
+
+{% block title %}Управление Статьями{% endblock %}
+
+{% block content %}
+
+    <h1>Управление Статьями ({{ pagination.totalItemCount }})</h1>
+    <form>
+        <div class="input-group mb-3">
+            <input type="text"
+                   name="q"
+                   class="form-control"
+                   placeholder="Найти..."
+                   value="{{ app.request.query.get('q') }}"
+            >
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-outline-secondary"><i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+        <div class="form-inline">
+            <label for="perPage">Записей на страницу:</label>
+            <select name="perPage" id="perPage" class="form-control mx-sm-3 mb-2">
+                {% for count in perPage %}
+                    <option {% if app.request.query.get('perPage') == count %} selected {% endif %}
+                            value="{{ count }}">{{ count }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Статья</th>
+            <th>Автор</th>
+            <th>Опубликована</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for article in pagination %}
+            <tr>
+                <td>
+                    <a href="{{ path('app_article_show', {slug: article.slug}) }}">
+                        {{ article.title }}
+                    </a>
+                </td>
+                <td>{{ article.author.firstName }}</td>
+                <td><i class="fas fa-{{ article.isPublished ? 'check' : 'times' }}"></i></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Нет статей</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ knp_pagination_render(pagination) }}
+{% endblock %}

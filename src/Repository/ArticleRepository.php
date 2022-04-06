@@ -25,7 +25,7 @@ class ArticleRepository extends ServiceEntityRepository
      */
     public function findLatestPublished(): array
     {
-        return $this->published($this->latest())
+        return $this->published($this->latestWithAuthor())
             ->addSelect('c')
             ->leftJoin('a.comments', 'c')
             ->addSelect('t')
@@ -40,7 +40,7 @@ class ArticleRepository extends ServiceEntityRepository
      */
     public function findLatest(): array
     {
-        return $this->latest()
+        return $this->latestWithAuthor()
             ->getQuery()
             ->getResult()
             ;
@@ -57,9 +57,12 @@ class ArticleRepository extends ServiceEntityRepository
             ;
     }
 
-    public function latest(QueryBuilder $qb = null): QueryBuilder
+    public function latestWithAuthor(QueryBuilder $qb = null): QueryBuilder
     {
-        return $this->getOrCreateQueryBuilder($qb)->orderBy('a.publishedAt', 'DESC');
+        return $this->getOrCreateQueryBuilder($qb)
+            ->innerJoin('a.author', 'u')
+            ->addSelect('u')
+            ->orderBy('a.publishedAt', 'DESC');
     }
 
     public function published(QueryBuilder $qb = null): QueryBuilder
@@ -70,5 +73,23 @@ class ArticleRepository extends ServiceEntityRepository
     public function getOrCreateQueryBuilder(?QueryBuilder $qb): QueryBuilder
     {
         return true === isset($qb) ? $qb : $this->createQueryBuilder('a');
+    }
+
+    /**
+     * @param string|null $query
+     *
+     * @return QueryBuilder
+     */
+    public function findAllWithSearchQueryBuilder(?string $query): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        if (null !== $query) {
+            $qb
+                ->andWhere('a.title LIKE :query OR a.body LIKE :query OR u.firstName LIKE :query')
+                ->setParameter('query', "%$query%");
+        }
+
+       return $this->latestWithAuthor($qb);
     }
 }

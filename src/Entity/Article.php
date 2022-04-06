@@ -138,6 +138,11 @@ class Article
         return $this;
     }
 
+    public function isPublished(): bool
+    {
+        return null !== $this->getPublishedAt();
+    }
+
     public function getLikeCount(): ?int
     {
         return $this->likeCount;
