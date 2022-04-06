@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
+ * @Assert\EnableAutoMapping()
  */
 class Article
 {
@@ -38,6 +39,7 @@ class Article
      * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(type="string", length=100, unique=true)
      * @Groups("show_article")
+     * @Assert\DisableAutoMapping
      */
     private $slug;
 
@@ -52,6 +54,22 @@ class Article
      * @Groups("show_article")
      */
     private $publishedAt;
+
+    /**
+     * @var \DateTime
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     * @Assert\DisableAutoMapping
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime")
+     * @Assert\DisableAutoMapping
+     */
+    protected $updatedAt;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
