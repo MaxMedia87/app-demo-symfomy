@@ -68,6 +68,10 @@ class ArticleFormType extends AbstractType
                     return $titleTransformFromDatabase;
                 },
                 function ($titleFromInput) {
+                    if (null === $titleFromInput) {
+                        return '';
+                    }
+
                     return $this->articleWordsFilter->filter($titleFromInput, ['стакан', 'налил']);
                 }
             ));
