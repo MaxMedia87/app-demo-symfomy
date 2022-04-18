@@ -3,16 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserRegistrationFormType;
 use App\Security\LoginFormAuthenticator;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
-use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 
 class SecurityController extends AbstractController
 {
@@ -47,6 +47,7 @@ class SecurityController extends AbstractController
      * @param UserPasswordHasherInterface $hasher
      * @param UserAuthenticatorInterface $userAuthenticator
      * @param LoginFormAuthenticator $authenticator
+     * @param EntityManagerInterface $em
      *
      * @return Response
      */
@@ -54,20 +55,26 @@ class SecurityController extends AbstractController
         Request $request,
         UserPasswordHasherInterface $hasher,
         UserAuthenticatorInterface $userAuthenticator,
-        LoginFormAuthenticator $authenticator
+        LoginFormAuthenticator $authenticator,
+        EntityManagerInterface $em
     ): Response {
-        if (true === $request->isMethod('POST')
-            && $this->isCsrfTokenValid('authenticate', $request->request->get('_csrf_token'))
-        ) {
-            $user = new User();
+
+        $form = $this->createForm(UserRegistrationFormType::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $user */
+            $user = $form->getData();
 
             $user
                 ->setIsActive(true)
-                ->setFirstName($request->request->get('firstName'))
-                ->setEmail($request->request->get('email'))
-                ->setPassword($hasher->hashPassword($user, $request->request->get('password')));
-
-            $em = $this->getDoctrine()->getManager();
+                ->setPassword(
+                    $hasher->hashPassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    )
+                );
 
             $em->persist($user);
             $em->flush();
@@ -79,6 +86,9 @@ class SecurityController extends AbstractController
             );
         }
 
-        return $this->render('security/register.html.twig', ['error' => '']);
+        return $this->render('security/register.html.twig', [
+            'registrationForm' => $form->createView(),
+            'error' => ''
+        ]);
     }
 }

@@ -40,7 +40,7 @@
         {% for article in pagination %}
             <tr>
                 <td>
-                    <a href="{{ path('app_article_show', {slug: article.slug}) }}">
+                    <a href="{{ path('app_admin_articles_edit', {id: article.id}) }}">
                         {{ article.title }}
                     </a>
                 </td>

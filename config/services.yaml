@@ -39,3 +39,6 @@ services:
 
     app.article.words.filter:
         class: App\Service\ArticleWordsFilter
+
+    app.registrtion.spam.filter:
+        class: App\Service\RegistrationSpamFilter
