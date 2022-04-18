@@ -4,7 +4,7 @@ namespace App\Service;
 
 class RegistrationSpamFilter
 {
-    protected const SUPPORTED_ZONES = ['ru', 'com', 'org'];
+    protected const SUPPORTED_ZONES = ['.ru', '.com', '.org'];
 
     /**
      * @param string|null $email
@@ -17,9 +17,8 @@ class RegistrationSpamFilter
             return true;
         }
 
-        preg_match('/@([\da-z\.-]+)\.([a-z\.]{2,6})$/', $email, $matches);
-
-        $domainZone = $matches[2];
+        $domain = mb_strstr($email, '@');
+        $domainZone = mb_strstr($domain, '.');
 
         if (false === in_array($domainZone, self::SUPPORTED_ZONES)) {
             return true;
