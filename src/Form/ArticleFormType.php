@@ -41,7 +41,8 @@ class ArticleFormType extends AbstractType
                 'required' => false
             ])
             ->add('body', TextareaType::class, [
-                'label' => 'Содержимое статьи'
+                'label' => 'Содержимое статьи',
+                'rows' => 5
             ])
             ->add('publishedAt', null, [
                 'label' => 'Дата публикации',
