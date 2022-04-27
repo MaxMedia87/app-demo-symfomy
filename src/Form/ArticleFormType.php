@@ -49,10 +49,6 @@ class ArticleFormType extends AbstractType
                 'label' => 'Содержимое статьи',
                 'rows' => 5
             ])
-            ->add('publishedAt', null, [
-                'label' => 'Дата публикации',
-                'widget' => 'single_text'
-            ])
             ->add('author', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => function (User $user) {
@@ -64,6 +60,13 @@ class ArticleFormType extends AbstractType
                 'disabled' => $cannotEditArticle
             ])
         ;
+
+        if (true === $options['enabled_published_at']) {
+            $builder->add('publishedAt', null, [
+                'label' => 'Дата публикации',
+                'widget' => 'single_text'
+            ]);
+        }
 
         $builder->get('title')
             ->addModelTransformer(new CallbackTransformer(
@@ -102,6 +105,7 @@ class ArticleFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Article::class,
+            'enabled_published_at' => false
         ]);
     }
 }
