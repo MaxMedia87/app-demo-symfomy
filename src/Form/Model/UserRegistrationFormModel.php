@@ -2,7 +2,7 @@
 
 namespace App\Form\Model;
 
-use App\Form\Validator\IsNotSpamBot;
+use App\Form\Validator\EmailRequirements;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class UserRegistrationFormModel
@@ -10,7 +10,7 @@ class UserRegistrationFormModel
     /**
      * @Assert\NotBlank()
      * @Assert\Email()
-     * @IsNotSpamBot()
+     * @EmailRequirements()
      */
     public $email;
 
