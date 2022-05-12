@@ -103,7 +103,9 @@ class ArticleController extends AbstractController
      */
     public function edit(Article $article, EntityManagerInterface $em, Request $request): Response
     {
-        $form = $this->createForm(ArticleFormType::class, $article);
+        $form = $this->createForm(ArticleFormType::class, $article, [
+            'enabled_published_at' => true
+        ]);
 
         $form->handleRequest($request);
 

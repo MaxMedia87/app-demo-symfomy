@@ -34,6 +34,11 @@ class ArticleFormType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var Article|null $article */
+        $article = $options['data'] ?? null;
+
+        $cannotEditArticle = null !== $article && null !== $article->getId() && true === $article->isPublished();
+
         $builder
             ->add('title', TextType::class, [
                 'label' => 'Название статьи',
@@ -41,11 +46,8 @@ class ArticleFormType extends AbstractType
                 'required' => false
             ])
             ->add('body', TextareaType::class, [
-                'label' => 'Содержимое статьи'
-            ])
-            ->add('publishedAt', null, [
-                'label' => 'Дата публикации',
-                'widget' => 'single_text'
+                'label' => 'Содержимое статьи',
+                'rows' => 5
             ])
             ->add('author', EntityType::class, [
                 'class' => User::class,
@@ -54,9 +56,17 @@ class ArticleFormType extends AbstractType
                 },
                 'choices' => $this->userRepository->findAllSortedByName(),
                 'placeholder' => 'Выберите автора статьи',
-                'invalid_message' => 'Автор не существует.'
+                'invalid_message' => 'Автор не существует.',
+                'disabled' => $cannotEditArticle
             ])
         ;
+
+        if (true === $options['enabled_published_at']) {
+            $builder->add('publishedAt', null, [
+                'label' => 'Дата публикации',
+                'widget' => 'single_text'
+            ]);
+        }
 
         $builder->get('title')
             ->addModelTransformer(new CallbackTransformer(
@@ -95,6 +105,7 @@ class ArticleFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Article::class,
+            'enabled_published_at' => false
         ]);
     }
 }
