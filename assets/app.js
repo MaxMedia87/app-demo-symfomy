@@ -13,6 +13,7 @@ import $ from 'jquery';
 require('bootstrap');
 
 import './js/like';
+import './js/bootstrap_file_field'
 
 // start the Stimulus application
 import './bootstrap';

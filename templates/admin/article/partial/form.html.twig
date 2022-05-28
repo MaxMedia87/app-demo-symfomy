@@ -1,5 +1,11 @@
 {{ form_start(articleForm) }}
 
+{{ form_row(articleForm.image, {
+    label: 'Картинка',
+    attr: {
+        placeholder: 'Выберите изображение'
+    }
+}) }}
 {{ form_row(articleForm.title, {label: 'Заголовок'}) }}
 {{ form_row(articleForm.body, {label: 'Содержимое'}) }}
 {% if articleForm.publishedAt is defined %}
