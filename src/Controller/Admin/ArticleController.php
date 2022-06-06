@@ -8,17 +8,15 @@ use App\Entity\Article;
 use App\Entity\User;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
+use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @method User|null getUser()
@@ -69,10 +67,14 @@ class ArticleController extends AbstractController
      *
      * @param EntityManagerInterface $em
      * @param Request $request
+     * @param FileUploader $articleFileUploader
      * @return Response
      */
-    public function create(EntityManagerInterface $em, Request $request): Response
-    {
+    public function create(
+        EntityManagerInterface $em,
+        Request $request,
+        FileUploader $articleFileUploader
+    ): Response {
         $form = $this->createForm(ArticleFormType::class);
 
         $form->handleRequest($request);
@@ -80,6 +82,11 @@ class ArticleController extends AbstractController
         if (true === $form->isSubmitted() && true === $form->isValid()) {
             /** @var Article $article */
             $article = $form->getData();
+
+            /** @var UploadedFile|null $image */
+            $image = $form->get('image')->getData();
+
+            $article->setImageFileName($articleFileUploader->uploadFile($image));
 
             $em->persist($article);
             $em->flush();
@@ -102,14 +109,14 @@ class ArticleController extends AbstractController
      * @param Article $article
      * @param EntityManagerInterface $em
      * @param Request $request
-     * @param SluggerInterface $slugger
+     * @param FileUploader $articleFileUploader
      * @return Response
      */
     public function edit(
         Article $article,
         EntityManagerInterface $em,
         Request $request,
-        SluggerInterface $slugger
+        FileUploader $articleFileUploader
     ): Response {
         $form = $this->createForm(ArticleFormType::class, $article, [
             'enabled_published_at' => true
@@ -123,9 +130,9 @@ class ArticleController extends AbstractController
 
             /** @var UploadedFile|null $image */
             $image = $form->get('image')->getData();
-            $newFile = $this->uploadImage($image, $slugger);
 
-            $article->setImageFileName($newFile->getFilename());
+            $article->setImageFileName($articleFileUploader->uploadFile($image));
+
             $em->persist($article);
             $em->flush();
 
@@ -138,19 +145,5 @@ class ArticleController extends AbstractController
             'articleForm' => $form->createView(),
             'showError' => $form->isSubmitted()
         ]);
-    }
-
-    protected function uploadImage(UploadedFile $image, SluggerInterface $slugger): File
-    {
-        $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-        $fileName = $slugger
-            ->slug($originalName)
-            ->append('-', uniqid())
-            ->append('.', $image->guessClientExtension())
-            ->toString();
-
-        $uploadDir = $this->getParameter('article_uploads_dir');
-
-        return $image->move($uploadDir, $fileName);
     }
 }

@@ -19,6 +19,9 @@ services:
             $isDebug: '%kernel.debug%'
             Demontpx\ParsedownBundle\Parsedown: '@demontpx_parsedown.parsedown'
             $slackUrl: '%env(SLACK_WEBHOOK_URL)%'
+
+            App\Service\FileUploader $articleFileUploader: '@file_uploader.article'
+
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -44,3 +47,11 @@ services:
 
     app.registrtion.spam.filter:
         class: App\Service\RegistrationSpamFilter
+
+    # Конфигурация серивса загрузки изображений для статей.
+    # Для загрузки других изображений (например аватар пользователя),
+    # необходимо сконфигурировать сервис с новым названием и входным параметром.
+    file_uploader.article:
+        class: App\Service\FileUploader
+        arguments:
+            $uploadPath: '%article_uploads_dir%'
