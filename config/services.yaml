@@ -7,7 +7,8 @@ parameters:
     app.support_email: '%env(SUPPORT_EMAIL)%'
     app.example_enable: '%env(bool:EXAMPLE_ENABLE)%'
     cache_adapter: cache.adapter.memcached
-    article_uploads_dir: '%kernel.project_dir%/public/uploads/articles'
+    article_uploads: 'uploads/articles'
+    article_uploads_dir: '%kernel.project_dir%/public/%article_uploads%'
 services:
     # default configuration for services in *this* file
     _defaults:

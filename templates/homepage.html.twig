@@ -28,9 +28,11 @@
                             {% set countComments = article.comments | length %}
                         <div class="article-container mb-2">
                             <div class="row no-gutters border rounded-lg overflow-hidden flex-md-row mb-4 shadow-sm position-relative">
+                                {% if article.imageFileName is not null %}
                                 <div class="col-auto d-none d-lg-block">
-                                    <img class="article-img" src="{{ asset(article.imagePath) }}">
+                                    <img class="article-img" src="{{ uploaded_asset('article_uploads', article.imageFileName) }}">
                                 </div>
+                                {% endif %}
                                 <a class="col p-2 px-4 d-flex flex-column article-item"
                                    href="{{ path('app_article_show', {slug: article.slug}) }}">
                                     <h5 class="mb-2">{{ article.title }}
