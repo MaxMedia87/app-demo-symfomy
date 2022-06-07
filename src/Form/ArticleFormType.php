@@ -14,6 +14,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class ArticleFormType extends AbstractType
 {
@@ -40,6 +42,18 @@ class ArticleFormType extends AbstractType
 
         $cannotEditArticle = null !== $article && null !== $article->getId() && true === $article->isPublished();
 
+        $imageConstraints = [
+            new Image([
+                'maxSize' => '1M',
+            ])
+        ];
+
+        if (null === $article || null === $article->getImageFileName()) {
+            $imageConstraints[] = new NotNull([
+                'message' => 'Не выбрано изобаржение.'
+            ]);
+        }
+
         $builder
             ->add('title', TextType::class, [
                 'label' => 'Название статьи',
@@ -47,7 +61,9 @@ class ArticleFormType extends AbstractType
                 'required' => false
             ])
             ->add('image', FileType::class, [
-                'mapped' => false
+                'mapped' => false,
+                'required' => false,
+                'constraints' => $imageConstraints
             ])
             ->add('body', TextareaType::class, [
                 'label' => 'Содержимое статьи',
