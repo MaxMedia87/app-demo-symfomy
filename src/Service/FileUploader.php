@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -23,14 +24,17 @@ class FileUploader
         $this->uploadPath = $uploadPath;
     }
 
-    public function uploadFile(UploadedFile $file): string
+    public function uploadFile(File $file): string
     {
-        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $originalName = pathinfo(
+            $file instanceof UploadedFile ? $file->getClientOriginalName() : $file->getFilename(),
+            PATHINFO_FILENAME
+        );
 
         $fileName = $this->slugger
             ->slug($originalName)
             ->append('-', uniqid())
-            ->append('.', $file->guessClientExtension())
+            ->append('.', $file->guessExtension())
             ->toString();
 
         $file->move($this->uploadPath, $fileName);
