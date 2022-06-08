@@ -30,7 +30,7 @@
                             <div class="row no-gutters border rounded-lg overflow-hidden flex-md-row mb-4 shadow-sm position-relative">
                                 {% if article.imageFileName is not null %}
                                 <div class="col-auto d-none d-lg-block">
-                                    <img class="article-img" src="{{ uploaded_asset('article_uploads', article.imageFileName) }}">
+                                    <img class="article-img" src="{{ uploaded_asset('article_uploads', article.imageFileName) | imagine_filter('article_preview') }}">
                                 </div>
                                 {% endif %}
                                 <a class="col p-2 px-4 d-flex flex-column article-item"

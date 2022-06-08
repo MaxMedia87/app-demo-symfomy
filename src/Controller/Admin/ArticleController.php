@@ -75,7 +75,7 @@ class ArticleController extends AbstractController
         Request $request,
         FileUploader $articleFileUploader
     ): Response {
-        $form = $this->createForm(ArticleFormType::class);
+        $form = $this->createForm(ArticleFormType::class, new Article());
 
         $form->handleRequest($request);
 
