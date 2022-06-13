@@ -18,6 +18,7 @@
         "liip/imagine-bundle": "^2.8",
         "nesbot/carbon": "^2.55",
         "nexylan/slack-bundle": "^2.3",
+        "oneup/flysystem-bundle": "^3",
         "php-http/guzzle6-adapter": "^2.0",
         "phpdocumentor/reflection-docblock": "^5.3",
         "sensio/framework-extra-bundle": "^6.2",
