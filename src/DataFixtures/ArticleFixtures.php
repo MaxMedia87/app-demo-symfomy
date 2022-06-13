@@ -62,15 +62,14 @@ class ArticleFixtures extends BaseFixtures implements DependentFixtureInterface
             $fileName = $this->faker->randomElement(self::$images);
             $originalFile = dirname(dirname(__DIR__)) . '/public/images/' . $fileName;
 
-            $tmpFileName = sys_get_temp_dir() . '/' . $fileName;
-
-            $fileSystem = new Filesystem();
-            $fileSystem->copy($originalFile, $tmpFileName, true);
-
             $article
                 ->setAuthor($author)
                 ->setLikeCount($this->faker->numberBetween(0, 10))
-                ->setImageFileName($this->articleFileUploader->uploadFile(new File($tmpFileName)));
+                ->setImageFileName(
+                    $this->articleFileUploader->uploadFile(
+                        new File($originalFile)
+                    )
+                );
 
             /** @var Tag[] $tags */
             $tags = [];

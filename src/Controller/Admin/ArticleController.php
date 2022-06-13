@@ -111,6 +111,7 @@ class ArticleController extends AbstractController
      * @param Request $request
      * @param FileUploader $articleFileUploader
      * @return Response
+     * @throws \Exception
      */
     public function edit(
         Article $article,
@@ -132,7 +133,7 @@ class ArticleController extends AbstractController
             $image = $form->get('image')->getData();
 
             if (null !== $image) {
-                $article->setImageFileName($articleFileUploader->uploadFile($image));
+                $article->setImageFileName($articleFileUploader->uploadFile($image, $article->getImageFileName()));
             }
 
             $em->persist($article);
