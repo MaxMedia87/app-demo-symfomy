@@ -8,6 +8,7 @@ parameters:
     app.example_enable: '%env(bool:EXAMPLE_ENABLE)%'
     cache_adapter: cache.adapter.memcached
     article_uploads: 'uploads/articles'
+    article_uploads_url: '/%article_uploads%'
     article_uploads_dir: '%kernel.project_dir%/public/%article_uploads%'
 services:
     # default configuration for services in *this* file
