@@ -8,10 +8,12 @@ use App\Entity\Article;
 use App\Entity\User;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
+use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -65,17 +67,26 @@ class ArticleController extends AbstractController
      *
      * @param EntityManagerInterface $em
      * @param Request $request
+     * @param FileUploader $articleFileUploader
      * @return Response
      */
-    public function create(EntityManagerInterface $em, Request $request): Response
-    {
-        $form = $this->createForm(ArticleFormType::class);
+    public function create(
+        EntityManagerInterface $em,
+        Request $request,
+        FileUploader $articleFileUploader
+    ): Response {
+        $form = $this->createForm(ArticleFormType::class, new Article());
 
         $form->handleRequest($request);
 
         if (true === $form->isSubmitted() && true === $form->isValid()) {
             /** @var Article $article */
             $article = $form->getData();
+
+            /** @var UploadedFile|null $image */
+            $image = $form->get('image')->getData();
+
+            $article->setImageFileName($articleFileUploader->uploadFile($image));
 
             $em->persist($article);
             $em->flush();
@@ -98,11 +109,16 @@ class ArticleController extends AbstractController
      * @param Article $article
      * @param EntityManagerInterface $em
      * @param Request $request
-     *
+     * @param FileUploader $articleFileUploader
      * @return Response
+     * @throws \Exception
      */
-    public function edit(Article $article, EntityManagerInterface $em, Request $request): Response
-    {
+    public function edit(
+        Article $article,
+        EntityManagerInterface $em,
+        Request $request,
+        FileUploader $articleFileUploader
+    ): Response {
         $form = $this->createForm(ArticleFormType::class, $article, [
             'enabled_published_at' => true
         ]);
@@ -112,6 +128,13 @@ class ArticleController extends AbstractController
         if (true === $form->isSubmitted() && true === $form->isValid()) {
             /** @var Article $article */
             $article = $form->getData();
+
+            /** @var UploadedFile|null $image */
+            $image = $form->get('image')->getData();
+
+            if (null !== $image) {
+                $article->setImageFileName($articleFileUploader->uploadFile($image, $article->getImageFileName()));
+            }
 
             $em->persist($article);
             $em->flush();

@@ -9,10 +9,13 @@ use App\Service\ArticleWordsFilter;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class ArticleFormType extends AbstractType
 {
@@ -39,11 +42,28 @@ class ArticleFormType extends AbstractType
 
         $cannotEditArticle = null !== $article && null !== $article->getId() && true === $article->isPublished();
 
+        $imageConstraints = [
+            new Image([
+                'maxSize' => '1M',
+            ])
+        ];
+
+        if (null === $article || null === $article->getImageFileName()) {
+            $imageConstraints[] = new NotNull([
+                'message' => 'Не выбрано изобаржение.'
+            ]);
+        }
+
         $builder
             ->add('title', TextType::class, [
                 'label' => 'Название статьи',
                 'help' => 'Не используйте слово "собака"',
                 'required' => false
+            ])
+            ->add('image', FileType::class, [
+                'mapped' => false,
+                'required' => false,
+                'constraints' => $imageConstraints
             ])
             ->add('body', TextareaType::class, [
                 'label' => 'Содержимое статьи',

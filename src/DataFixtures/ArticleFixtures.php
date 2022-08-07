@@ -5,9 +5,12 @@ namespace App\DataFixtures;
 use App\Entity\Article;
 use App\Entity\Tag;
 use App\Entity\User;
+use App\Service\FileUploader;
 use DateTimeImmutable;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
 
 class ArticleFixtures extends BaseFixtures implements DependentFixtureInterface
 {
@@ -23,6 +26,16 @@ class ArticleFixtures extends BaseFixtures implements DependentFixtureInterface
         'car2.jpg',
         'car3.jpg'
     ];
+
+    /**
+     * @var FileUploader
+     */
+    private $articleFileUploader;
+
+    public function __construct(FileUploader $articleFileUploader)
+    {
+        $this->articleFileUploader = $articleFileUploader;
+    }
 
     public function loadData(ObjectManager $manager): void
     {
@@ -46,10 +59,17 @@ class ArticleFixtures extends BaseFixtures implements DependentFixtureInterface
             /** @var User $author */
             $author = $this->getRandomReference(User::class);
 
+            $fileName = $this->faker->randomElement(self::$images);
+            $originalFile = dirname(dirname(__DIR__)) . '/public/images/' . $fileName;
+
             $article
                 ->setAuthor($author)
                 ->setLikeCount($this->faker->numberBetween(0, 10))
-                ->setImageFileName($this->faker->randomElement(self::$images));
+                ->setImageFileName(
+                    $this->articleFileUploader->uploadFile(
+                        new File($originalFile)
+                    )
+                );
 
             /** @var Tag[] $tags */
             $tags = [];

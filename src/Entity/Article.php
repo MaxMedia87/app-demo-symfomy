@@ -188,11 +188,6 @@ class Article
         return $this;
     }
 
-    public function getImagePath(): string
-    {
-        return 'images/' . $this->getImageFileName();
-    }
-
     public function like(): self
     {
         $this->likeCount++;

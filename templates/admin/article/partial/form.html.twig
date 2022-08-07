@@ -1,5 +1,17 @@
 {{ form_start(articleForm) }}
 
+{% set imageFileName = articleForm.vars.data.imageFileName %}
+
+{% if imageFileName %}
+    <img src="{{ imageFileName | imagine_filter('article_preview')}}" alt="" width="100">
+{% endif %}
+
+{{ form_row(articleForm.image, {
+    label: 'Картинка',
+    attr: {
+        placeholder: 'Выберите изображение'
+    }
+}) }}
 {{ form_row(articleForm.title, {label: 'Заголовок'}) }}
 {{ form_row(articleForm.body, {label: 'Содержимое'}) }}
 {% if articleForm.publishedAt is defined %}
