@@ -10,7 +10,11 @@
 {% block content %}
     <div class="col-sm-12 p-2">
         <div class="media d-flex align-content-center">
-            <img class="article-detail-image align-self-start mr-3 rounded" src="{{ asset(article.imagePath) }}">
+            {% if article.imageFileName is not null %}
+                <a href="{{ uploaded_asset('article_uploads_url', article.imageFileName) }}" target="_blank">
+                    <img class="article-detail-image align-self-start mr-3 rounded" src="{{ article.imageFileName | imagine_filter('article_detail') }}">
+                </a>
+            {% endif %}
             <div class="media-body d-inline-block align-self-center">
                 <h1 class="mb-2">{{ article.title }}</h1>
                 {% include 'articles/partial/article_tags.html.twig' with { tags: article.tags } %}
