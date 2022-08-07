@@ -7,9 +7,13 @@ use App\Form\Model\UserRegistrationFormModel;
 use App\Form\UserRegistrationFormType;
 use App\Security\LoginFormAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -57,7 +61,8 @@ class SecurityController extends AbstractController
         UserPasswordHasherInterface $hasher,
         UserAuthenticatorInterface $userAuthenticator,
         LoginFormAuthenticator $authenticator,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        MailerInterface $mailer
     ): Response {
 
         $form = $this->createForm(UserRegistrationFormType::class);
@@ -82,6 +87,15 @@ class SecurityController extends AbstractController
 
             $em->persist($user);
             $em->flush();
+
+            $email = (new TemplatedEmail())
+                ->from(new Address('max.sakharov.kos@gmail.com', 'Cat-Cas-Car'))
+                ->to(new Address('maksim_saharov@mail.ru', $user->getFirstName()))
+                ->subject('Добро пожаловать на CatCasCar')
+                ->htmlTemplate("email/welcome.html.twig")
+            ;
+
+            $mailer->send($email);
 
             return $userAuthenticator->authenticateUser(
                 $user,
