@@ -6,14 +6,12 @@ use App\Entity\User;
 use App\Form\Model\UserRegistrationFormModel;
 use App\Form\UserRegistrationFormType;
 use App\Security\LoginFormAuthenticator;
+use App\Service\MailerSender;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -53,8 +51,10 @@ class SecurityController extends AbstractController
      * @param UserAuthenticatorInterface $userAuthenticator
      * @param LoginFormAuthenticator $authenticator
      * @param EntityManagerInterface $em
+     * @param MailerSender $mailer
      *
      * @return Response
+     * @throws TransportExceptionInterface
      */
     public function register(
         Request $request,
@@ -62,7 +62,7 @@ class SecurityController extends AbstractController
         UserAuthenticatorInterface $userAuthenticator,
         LoginFormAuthenticator $authenticator,
         EntityManagerInterface $em,
-        MailerInterface $mailer
+        MailerSender $mailer
     ): Response {
 
         $form = $this->createForm(UserRegistrationFormType::class);
@@ -88,14 +88,7 @@ class SecurityController extends AbstractController
             $em->persist($user);
             $em->flush();
 
-            $email = (new TemplatedEmail())
-                ->from(new Address('max.sakharov.kos@gmail.com', 'Cat-Cas-Car'))
-                ->to(new Address('maksim_saharov@mail.ru', $user->getFirstName()))
-                ->subject('Добро пожаловать на CatCasCar')
-                ->htmlTemplate("email/welcome.html.twig")
-            ;
-
-            $mailer->send($email);
+            $mailer->sendWelcomeEmail($user);
 
             return $userAuthenticator->authenticateUser(
                 $user,

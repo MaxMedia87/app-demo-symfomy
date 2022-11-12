@@ -6,14 +6,11 @@ namespace App\Command;
 
 use App\Repository\ArticleRepository;
 use App\Repository\UserRepository;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use App\Service\MailerSender;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
 
 class WeeklyNewsletterCommand extends Command
 {
@@ -26,8 +23,9 @@ class WeeklyNewsletterCommand extends Command
      * @var ArticleRepository
      */
     private $articleRepository;
+
     /**
-     * @var MailerInterface
+     * @var MailerSender
      */
     private $mailer;
 
@@ -43,7 +41,7 @@ class WeeklyNewsletterCommand extends Command
         string $name = null,
         UserRepository $userRepository,
         ArticleRepository $articleRepository,
-        MailerInterface $mailer
+        MailerSender $mailer
     ) {
         parent::__construct($name);
 
@@ -69,16 +67,7 @@ class WeeklyNewsletterCommand extends Command
         $io->progressStart(count($users));
 
         foreach ($users as $user) {
-            $email = (new TemplatedEmail())
-                ->from(new Address('max.sakharov.kos@gmail.com', 'Cat-Cas-Car'))
-                ->to(new Address('maksim_saharov@mail.ru', $user->getFirstName()))
-                ->subject('Еженедельная рассылка статей CatCasCar')
-                ->htmlTemplate('email/weekly-newsletter.html.twig')
-                ->context(['articles' => $articles])
-                ->attach('Опубликовано статей ' . count($articles), 'report_'. date('Y-m-d') . '.txt')
-            ;
-
-            $this->mailer->send($email);
+            $this->mailer->sendWeeklyNewsLetterEmail($user, $articles);
 
             $io->progressAdvance();
             break;
