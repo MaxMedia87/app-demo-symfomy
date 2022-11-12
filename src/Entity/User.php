@@ -65,6 +65,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $articles;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $subscribeToNewsletter;
+
     public function __construct()
     {
         $this->apiTokens = new ArrayCollection();
@@ -261,5 +266,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function equals(self $user): bool
     {
         return $this->getId() === $user->getId();
+    }
+
+    public function getSubscribeToNewsletter(): ?bool
+    {
+        return $this->subscribeToNewsletter;
+    }
+
+    public function setSubscribeToNewsletter(?bool $subscribeToNewsletter): self
+    {
+        $this->subscribeToNewsletter = $subscribeToNewsletter;
+
+        return $this;
     }
 }

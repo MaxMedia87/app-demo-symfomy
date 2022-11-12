@@ -38,6 +38,19 @@ class ArticleRepository extends ServiceEntityRepository
     /**
      * @return Article[]
      */
+    public function findAllPublishedLastWeek(): array
+    {
+        return $this->published($this->latestWithAuthor())
+            ->andWhere('a.publishedAt >= :week_ago')
+            ->setParameter('week_ago', new \DateTimeImmutable('-1 week'))
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return Article[]
+     */
     public function findLatest(): array
     {
         return $this->latestWithAuthor()

@@ -41,7 +41,8 @@ class UserFixtures extends BaseFixtures
                 ->setFirstName('Администратор')
                 ->setPassword($this->passwordHasher->hashPassword($user, '123456'))
                 ->setIsActive(true)
-                ->setRoles(['ROLE_ADMIN']);
+                ->setRoles(['ROLE_ADMIN'])
+                ->setSubscribeToNewsletter(true);
 
             $manager->persist(new ApiToken($user));
         });
@@ -54,7 +55,9 @@ class UserFixtures extends BaseFixtures
                 ->setIsActive(true);
 
             if ($this->faker->boolean(30)) {
-                $user->setIsActive(false);
+                $user
+                    ->setIsActive(false)
+                    ->setSubscribeToNewsletter(true);
             }
 
             $manager->persist(new ApiToken($user));

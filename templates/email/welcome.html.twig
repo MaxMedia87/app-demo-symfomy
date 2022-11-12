@@ -1,98 +1,42 @@
-{% apply inline_css(source('@styles/email/email.css')) %}
+{% extends 'email/base.html.twig' %}
 
-<!doctype html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>{{ email.subject }}</title>
-</head>
-<body class="">
-<table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body">
+{% block content %}
+<table role="presentation" border="0" cellpadding="0" cellspacing="0">
     <tr>
-        <td>&nbsp;</td>
-        <td class="container">
-            <div class="content">
-
-
-                <div class="header">
-                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td class="content-block">
-                                <h1><a href="{{ url('app_homepage') }}">Cat-Cas-Car</a></h1>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-
-                <!-- START CENTERED WHITE CONTAINER -->
-                <table role="presentation" class="main">
-
-                    <!-- START MAIN CONTENT AREA -->
-                    <tr>
-                        <td class="wrapper">
-                            <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td>
-                                        <p>Наконец-таки ты с нами, дорогой <b>{{ email.toName }}</b>.</p>
-                                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
-                                            <tbody>
-                                            <tr>
-                                                <td align="right" class="image-column">
-                                                    <img src="{{ email.image('@images/cat-profile.png') }}" width="80" height="80">
-                                                </td>
-                                                <td align="left">
-                                                    <p>
-                                                        Теперь ты можешь вместе с нами участвовать в жизни поедателей сосисок.
-                                                        Обсуждать свое авто и клеветать на собак. Скорей-скорей оставь комментарии в статье про мышей.
-                                                        И лови красную точку.
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
-                                            <tbody>
-                                            <tr>
-                                                <td align="left">
-                                                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                                                        <tbody>
-                                                        <tr>
-                                                            <td> <a href="{{ url('app_homepage') }}" target="_blank">Скорее на сайт</a> </td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-
-                    <!-- END MAIN CONTENT AREA -->
-                </table>
-                <!-- END CENTERED WHITE CONTAINER -->
-
-                <!-- START FOOTER -->
-                <div class="footer">
-                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td class="content-block">
-                                <span>C любовью, Cat-Cas-Car</span>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <!-- END FOOTER -->
-
-            </div>
+        <td>
+            <p>Наконец-таки ты с нами, дорогой <b>{{ email.toName }}</b>.</p>
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+                <tbody>
+                <tr>
+                    <td align="right" class="image-column">
+                        <img src="{{ email.image('@images/cat-profile.png') }}" width="80" height="80">
+                    </td>
+                    <td align="left">
+                        <p>
+                            Теперь ты можешь вместе с нами участвовать в жизни поедателей сосисок.
+                            Обсуждать свое авто и клеветать на собак. Скорей-скорей оставь комментарии в статье про мышей.
+                            И лови красную точку.
+                        </p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+                <tbody>
+                <tr>
+                    <td align="left">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                            <tbody>
+                            <tr>
+                                <td> <a href="{{ url('app_homepage') }}" target="_blank">Скорее на сайт</a> </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </td>
-        <td>&nbsp;</td>
     </tr>
 </table>
-</body>
-</html>
-{% endapply %}
+{% endblock %}
