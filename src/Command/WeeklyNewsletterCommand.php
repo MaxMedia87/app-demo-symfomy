@@ -31,11 +31,6 @@ class WeeklyNewsletterCommand extends Command
      */
     private $mailer;
 
-    /**
-     * @var ParameterBagInterface
-     */
-    private $parameterBag;
-
     protected function configure(): void
     {
         $this
@@ -48,15 +43,13 @@ class WeeklyNewsletterCommand extends Command
         string $name = null,
         UserRepository $userRepository,
         ArticleRepository $articleRepository,
-        MailerInterface $mailer,
-        ParameterBagInterface $parameterBag
+        MailerInterface $mailer
     ) {
         parent::__construct($name);
 
         $this->userRepository = $userRepository;
         $this->articleRepository = $articleRepository;
         $this->mailer = $mailer;
-        $this->parameterBag = $parameterBag;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -82,7 +75,7 @@ class WeeklyNewsletterCommand extends Command
                 ->subject('Еженедельная рассылка статей CatCasCar')
                 ->htmlTemplate('email/weekly-newsletter.html.twig')
                 ->context(['articles' => $articles])
-                ->attachFromPath($this->parameterBag->get('article_uploads_dir') . '/car1-62a735f1eff67.png')
+                ->attach('Опубликовано статей ' . count($articles), 'report_'. date('Y-m-d') . '.txt')
             ;
 
             $this->mailer->send($email);
